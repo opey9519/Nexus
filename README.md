@@ -26,9 +26,9 @@ Many athletes and individuals rely on multiple disconnected apps to track:
 This fragmentation leads to poor data visibility, inconsistent tracking, and lack of actionable insights. Nexus solves this by centralizing all performance data into one unified system.
 
 ## System Architecture
-
+![System Architecture](doc/Nexus-Architecture.drawio.png)
 ## Database Architecture
-
+![Database Architecture](doc/DB-Diagram.png)
 ## Features in Detail
 
 ## Development Workflow
