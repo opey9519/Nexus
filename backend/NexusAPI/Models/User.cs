@@ -1,8 +1,5 @@
 // Contains generic database model for users
 
-
-using System.ComponentModel.DataAnnotations;
-
 namespace NexusAPI.Models;
 
 public class User
