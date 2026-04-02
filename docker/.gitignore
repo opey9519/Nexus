@@ -1,0 +1,19 @@
+# Ignore environment variables
+
+.env
+
+# OS files
+
+.DS_Store
+
+# Docker overrides (if add later)
+
+docker-compose.override.yml
+
+# Logs
+
+*.log
+
+# Temporary files
+
+*.tmp

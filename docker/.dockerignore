@@ -1,0 +1,29 @@
+# Git
+
+.git
+.gitignore
+
+# Environment files
+
+.env
+
+# Node / frontend (if ever referenced)
+
+node_modules
+
+# OS files
+
+.DS_Store
+
+# Logs
+
+*.log
+
+# Temp files
+
+*.tmp
+
+# Docs / misc
+
+README.md
+LICENSE
