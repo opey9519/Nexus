@@ -8,9 +8,10 @@ namespace NexusAPI.Controllers;
 [Route("api/user")]
 public class UserController(IUserService userService) : ControllerBase
 {
+    // User Interface
     private readonly IUserService _userService = userService;
 
-    // Create User (currently testing database connection)
+    // Create User
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {

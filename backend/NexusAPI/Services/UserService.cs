@@ -2,28 +2,39 @@ using NexusAPI.Data;
 using NexusAPI.Models;
 using NexusAPI.DTOs;
 using NexusAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace NexusAPI.Services;
 
-public class UserService(ApplicationDbContext context) : IUserService
+public class UserService(ApplicationDbContext context, UserManager<ApplicationUserModel> userManager) : IUserService
 {
     // Connection to Database
     private readonly ApplicationDbContext _context = context;
+    // Connection to Identity
+    private readonly UserManager<ApplicationUserModel> _userManager = userManager;
 
-    public async Task<User> CreateUserAsync(CreateUserDto dto)
+
+    // Create User & Hash Password
+    public async Task<ResponseUserDto> CreateUserAsync(CreateUserDto dto)
     {
-        // Hash Passwords Later (only fake data for now)
-        var user = new User
+        // Create new user object
+        var user = new ApplicationUserModel
         {
-            Id = Guid.NewGuid(),
             Email = dto.Email,
-            Username = dto.Username,
-            PasswordHash = dto.Password // !!!!!!! Not secure, fix!!!!!!!
+            UserName = dto.Username,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            CreatedAt = DateTime.UtcNow
         };
+        var result = await _userManager.CreateAsync(user, dto.Password); // Hashes password & adds to database
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        if (!result.Succeeded) throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
 
-        return user;
+        return new ResponseUserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Username = user.UserName
+        };
     }
 }

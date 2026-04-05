@@ -1,11 +1,12 @@
-// Contains generic database model for users
-
+using Microsoft.AspNetCore.Identity;
 namespace NexusAPI.Models;
 
-public class User
+// Contains generic database model for users
+// Inherits from Identity User, see docs for inherited properties - https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.identityuser?view=aspnetcore-10.0
+
+public class ApplicationUserModel : IdentityUser
 {
-    public Guid Id { get; set; }
-    required public string Email { get; set; }
-    required public string Username { get; set; }
-    required public string PasswordHash { get; set; }
+    public string FirstName { get; set; } = default!;
+    public string LastName { get; set; } = default!;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
