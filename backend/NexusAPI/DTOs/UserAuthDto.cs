@@ -17,3 +17,10 @@ public class ResponseUserDto
     required public string Email { get; set; }
     required public string Username { get; set; }
 }
+
+// Input DTO
+public class LoginUserDto
+{
+    required public string Email { get; set; }
+    required public string Password { get; set; }
+}

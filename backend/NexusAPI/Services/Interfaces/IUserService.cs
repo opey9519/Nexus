@@ -1,4 +1,5 @@
 using NexusAPI.DTOs;
+using NexusAPI.Models;
 
 namespace NexusAPI.Services.Interfaces;
 
@@ -7,8 +8,8 @@ namespace NexusAPI.Services.Interfaces;
 public interface IUserService
 {
     Task<ResponseUserDto> CreateUserAsync(CreateUserDto user);
-
-    /// Sign in
-    /// Sign out
-    /// Change Password
+    Task<(string accessToken, RefreshToken refreshToken)> LoginUserAsync(LoginUserDto loginInfo);
+    Task<(string accessToken, RefreshToken refreshToken)> RefreshUserAsync(string refreshToken);
+    // Task LogoutUserAsync();
+    // Task ChangePasswordAsync();
 }

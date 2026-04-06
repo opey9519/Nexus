@@ -6,8 +6,12 @@ using NexusAPI.Services.Interfaces;
 using NexusAPI.Services;
 using NexusAPI.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 //// Add Services
 // Controllers
@@ -15,6 +19,7 @@ builder.Services.AddControllers();
 
 // Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<TokenService>();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -34,10 +39,51 @@ builder.Services.AddIdentity<ApplicationUserModel, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// JWT Auth 
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new InvalidOperationException("JWT Key is not configured"));
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = true; // MUST be true in production
+    options.SaveToken = false;
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
+
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+
+        ClockSkew = TimeSpan.Zero // no extra expiration buffer
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["access_token"];
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddAuthorization();
+
 
 // Add Swagger - API Test/Monitoring Tool 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 //// Build application
 var app = builder.Build();
@@ -54,6 +100,8 @@ if (app.Environment.IsDevelopment())
 
 //// Map settings
 app.MapControllers();
+app.UseAuthentication();
+app.UseAuthorization();
 
 // // Verify database connection
 // var conn = builder.Configuration.GetConnectionString("DefaultConnection");
