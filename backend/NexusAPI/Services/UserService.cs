@@ -4,7 +4,6 @@ using NexusAPI.DTOs;
 using NexusAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace NexusAPI.Services;
 
@@ -61,6 +60,7 @@ public class UserService(ApplicationDbContext context, UserManager<ApplicationUs
         return (accessToken, refreshToken);
     }
 
+    // Refresh JWT tokens
     public async Task<(string accessToken, RefreshToken refreshToken)> RefreshUserAsync(string refreshToken)
     {
         var storedToken = await _context.RefreshTokens
@@ -82,5 +82,20 @@ public class UserService(ApplicationDbContext context, UserManager<ApplicationUs
         await _context.SaveChangesAsync();
 
         return (newAccessToken, newRefreshToken);
+    }
+
+    // Logout & Revoke Refresh token and Delete Cookies
+    public async Task LogoutUserAsync(string refreshToken)
+    {
+        if (string.IsNullOrEmpty(refreshToken)) throw new UnauthorizedAccessException("Invalid refresh token");
+
+        var storedToken = await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == refreshToken);
+
+        if (storedToken == null || storedToken.IsRevoked || storedToken.Expires < DateTime.UtcNow)
+            throw new UnauthorizedAccessException("Invalid refresh token");
+
+        storedToken.IsRevoked = true;
+
+        await _context.SaveChangesAsync();
     }
 }

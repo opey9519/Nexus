@@ -82,10 +82,21 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     // Logout User
-    // [Authorize]
-    // [HttpPost("/logout")]
-    // public async Task<IActionResult> LogoutUserAsync()
-    // {
+    [Authorize]
+    [HttpPost("/logout")]
+    public async Task<IActionResult> LogoutUserAsync()
+    {
+        var refreshToken = Request.Cookies["refresh_token"];
 
-    // }
+        if (!string.IsNullOrEmpty(refreshToken))
+        {
+            await _userService.LogoutUserAsync(refreshToken);
+        }
+
+        // Clear Cookies
+        Response.Cookies.Delete("access_token");
+        Response.Cookies.Delete("refresh_token");
+
+        return Ok(new { message = "Logged out successfully" });
+    }
 }
