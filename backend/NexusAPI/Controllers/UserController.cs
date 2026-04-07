@@ -6,14 +6,14 @@ using NexusAPI.Services.Interfaces;
 namespace NexusAPI.Controllers;
 
 [ApiController]
-[Route("api/user")]
+[Route("api/auth")]
 public class UserController(IUserService userService) : ControllerBase
 {
     // User Interface
     private readonly IUserService _userService = userService;
 
     // Create User
-    [HttpPost]
+    [HttpPost("/register")]
     public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
         var createdUser = await _userService.CreateUserAsync(userDto);

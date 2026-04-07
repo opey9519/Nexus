@@ -63,6 +63,7 @@ public class UserService(ApplicationDbContext context, UserManager<ApplicationUs
     // Refresh JWT tokens
     public async Task<(string accessToken, RefreshToken refreshToken)> RefreshUserAsync(string refreshToken)
     {
+        // Verify refresh token matches stored
         var storedToken = await _context.RefreshTokens
             .Include(rt => rt.User)
             .FirstOrDefaultAsync(rt => rt.Token == refreshToken);
