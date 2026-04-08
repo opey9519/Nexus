@@ -6,7 +6,7 @@ namespace NexusAPI.Models;
 
 public class ApplicationUserModel : IdentityUser
 {
-    public string FirstName { get; set; } = default!;
-    public string LastName { get; set; } = default!;
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

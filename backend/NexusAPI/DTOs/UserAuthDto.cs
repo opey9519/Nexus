@@ -6,8 +6,8 @@ public class CreateUserDto
     required public string Email { get; set; }
     required public string Username { get; set; }
     required public string Password { get; set; }
-    public string FirstName { get; set; } = default!;
-    public string LastName { get; set; } = default!;
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
 }
 
 // Output DTO
