@@ -31,7 +31,7 @@ public class UserService(ApplicationDbContext context, UserManager<ApplicationUs
         };
         var result = await _userManager.CreateAsync(user, dto.Password); // Hashes password & adds to database
 
-        if (!result.Succeeded) throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+        if (!result.Succeeded) throw new ArgumentException("This is an exception");
 
         return new ResponseUserDto
         {

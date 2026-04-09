@@ -5,13 +5,15 @@ using NexusAPI.Data;
 using NexusAPI.Services.Interfaces;
 using NexusAPI.Services;
 using NexusAPI.Models;
+using NexusAPI.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
+//// Add Middleware
 
 //// Add Services
 // Controllers
@@ -100,6 +102,7 @@ if (app.Environment.IsDevelopment())
 
 //// Map settings
 app.MapControllers();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
