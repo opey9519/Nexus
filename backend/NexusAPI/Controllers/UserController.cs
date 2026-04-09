@@ -13,7 +13,7 @@ public class UserController(IUserService userService) : ControllerBase
     private readonly IUserService _userService = userService;
 
     // Create User
-    [HttpPost("/register")]
+    [HttpPost("register")]
     public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
         var createdUser = await _userService.CreateUserAsync(userDto);
@@ -21,7 +21,7 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     // Log in user & handle JWT + Cookies
-    [HttpPost("/login")]
+    [HttpPost("login")]
     public async Task<IActionResult> LoginUserAsync(LoginUserDto loginDto)
     {
         var (accessToken, refreshToken) = await _userService.LoginUserAsync(loginDto);
@@ -83,7 +83,7 @@ public class UserController(IUserService userService) : ControllerBase
 
     // Logout User
     [Authorize]
-    [HttpPost("/logout")]
+    [HttpPost("logout")]
     public async Task<IActionResult> LogoutUserAsync()
     {
         var refreshToken = Request.Cookies["refresh_token"];
