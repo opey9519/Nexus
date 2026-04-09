@@ -32,7 +32,7 @@ public class WebApplicationFactory : WebApplicationFactory<Program>
         });
 
         // Configure Services (Database)
-        builder.ConfigureServices(services =>
+        builder.ConfigureServices(async services =>
         {
             // Remove Existing DbContest
             // Do not want to affect Dev/Prod Databases during Tests
@@ -59,6 +59,8 @@ public class WebApplicationFactory : WebApplicationFactory<Program>
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             db.Database.EnsureCreated();
+
+            await TestDataSeeder.SeedAsync(scope.ServiceProvider);
         });
     }
 
