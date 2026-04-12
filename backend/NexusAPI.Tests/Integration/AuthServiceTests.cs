@@ -75,4 +75,29 @@ public class AuthServiceTests(WebApplicationFactory factory) : IntegrationTestBa
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+
+    [Fact]
+    public async Task RefreshToken_ReturnsNewTokens_WhenValidRefreshToken()
+    {
+        var newUser = new LoginUserDto
+        {
+            Email = "seeded@test.com",
+            Password = "Password123!"
+        };
+
+        var loginResponse = await Client.PostAsJsonAsync("/api/auth/login", newUser);
+        loginResponse.EnsureSuccessStatusCode();
+
+        var cookies = loginResponse.Headers.GetValues("Set-Cookie").Select(c => c.Split(";")[0]).ToList();
+
+        // Act 2: Refresh
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/auth/refresh");
+        request.Headers.Add("Cookie", string.Join("; ", cookies));
+
+        var refreshResponse = await Client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, refreshResponse.StatusCode);
+        Assert.True(refreshResponse.Headers.Contains("Set-Cookie"));
+    }
 }
