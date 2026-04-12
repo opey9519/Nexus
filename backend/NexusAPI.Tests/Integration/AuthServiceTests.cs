@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using NexusAPI.DTOs;
 using NexusAPI.Tests.Infrastructure;
+using SQLitePCL;
 
 namespace NexusAPI.Tests.Integration;
 
@@ -99,5 +100,42 @@ public class AuthServiceTests(WebApplicationFactory factory) : IntegrationTestBa
         // Assert
         Assert.Equal(HttpStatusCode.OK, refreshResponse.StatusCode);
         Assert.True(refreshResponse.Headers.Contains("Set-Cookie"));
+    }
+
+    [Fact]
+    public async Task Logout_ReturnsTrue_WhenValidUser()
+    {
+        // Login User
+        var newUser = new LoginUserDto
+        {
+            Email = "seeded@test.com",
+            Password = "Password123!"
+        };
+
+        var loginResponse = await Client.PostAsJsonAsync("/api/auth/login", newUser);
+        loginResponse.EnsureSuccessStatusCode();
+
+        var cookies = loginResponse.Headers.GetValues("Set-Cookie").Select(c => c.Split(";")[0]).ToList();
+
+        // Logout User
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/auth/logout");
+        request.Headers.Add("Cookie", string.Join("; ", cookies));
+
+        var logoutResponse = await Client.SendAsync(request);
+
+        // Remove Cookie & Revoke Refresh Token
+        Assert.Equal(HttpStatusCode.OK, logoutResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task Logout_ReturnsFalse_WhenInvalidUser()
+    {
+        // Logout User
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/auth/logout");
+
+        var logoutResponse = await Client.SendAsync(request);
+
+        // Remove Cookie & Revoke Refresh Token
+        Assert.Equal(HttpStatusCode.Unauthorized, logoutResponse.StatusCode);
     }
 }

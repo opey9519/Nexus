@@ -56,6 +56,7 @@ public class UserService(ApplicationDbContext context, UserManager<ApplicationUs
 
         var refreshToken = _tokenService.CreateRefreshToken(user.Id, user);
         await _context.RefreshTokens.AddAsync(refreshToken);
+        await _context.SaveChangesAsync();
 
         return (accessToken, refreshToken);
     }

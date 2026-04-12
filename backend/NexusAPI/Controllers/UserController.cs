@@ -82,7 +82,6 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     // Logout User
-    [Authorize]
     [HttpPost("logout")]
     public async Task<IActionResult> LogoutUserAsync()
     {
@@ -91,6 +90,10 @@ public class UserController(IUserService userService) : ControllerBase
         if (!string.IsNullOrEmpty(refreshToken))
         {
             await _userService.LogoutUserAsync(refreshToken);
+        }
+        else
+        {
+            return Unauthorized("Not authorized");
         }
 
         // Clear Cookies
