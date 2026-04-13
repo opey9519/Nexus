@@ -6,7 +6,6 @@ public class UserPutDto
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? PhoneNumber { get; set; }
-    public bool TwoFactorEnabled { get; set; }
     required public string Email { get; set; }
 }
 

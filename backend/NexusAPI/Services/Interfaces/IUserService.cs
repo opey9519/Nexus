@@ -5,4 +5,5 @@ namespace NexusAPI.Services.Interfaces;
 public interface IUserService
 {
     Task<UserGetResponseDto> GetUserByIdAsync(string id);
+    Task PutUserByIdAsync(UserPutDto dto, string id);
 }

@@ -12,6 +12,7 @@ public class UserService(ApplicationDbContext context, UserManager<ApplicationUs
     private readonly UserManager<ApplicationUserModel> _userManager = userManager;
     private readonly TokenService _tokenService = tokenService;
 
+    // Retrieves basic user information by Id
     public async Task<UserGetResponseDto> GetUserByIdAsync(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -28,5 +29,22 @@ public class UserService(ApplicationDbContext context, UserManager<ApplicationUs
         };
 
         return response;
+    }
+
+    // Updates basic user information by id
+    public async Task PutUserByIdAsync(UserPutDto dto, string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+
+        if (user == null) throw new InvalidOperationException("User not found");
+
+        user.FirstName = dto.FirstName ?? user.FirstName;
+        user.LastName = dto.LastName ?? user.LastName;
+        user.PhoneNumber = dto.PhoneNumber ?? user.PhoneNumber;
+        user.Email = dto.Email ?? user.Email;
+
+        var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded) throw new ArgumentException("Failed to edit user");
     }
 }

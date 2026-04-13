@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NexusAPI.DTOs;
 using NexusAPI.Services.Interfaces;
 
 namespace NexusAPI.Controllers;
@@ -16,9 +17,10 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(new { message = "User Retrieved", userData });
     }
 
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> PutUser(string id)
-    // {
-    //     // var userD
-    // }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutUser(UserPutDto dto, string id)
+    {
+        await _userService.PutUserByIdAsync(dto, id);
+        return Ok(new { message = "User Updated" });
+    }
 }
