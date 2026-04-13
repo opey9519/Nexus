@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Json;
 using NexusAPI.DTOs;
 using NexusAPI.Tests.Infrastructure;
-using SQLitePCL;
 
 namespace NexusAPI.Tests.Integration;
 
