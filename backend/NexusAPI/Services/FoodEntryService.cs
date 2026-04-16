@@ -25,11 +25,12 @@ public class FoodEntryService(ApplicationDbContext context) : IFoodEntryService
         };
     }
 
-    public async Task<FoodEntryDto> CreateFoodEntry(CreateFoodEntryDto dto)
+    public async Task<FoodEntryDto> CreateFoodEntry(CreateFoodEntryDto dto, string userId)
     {
+        // Create new food entry
         var newFood = new FoodEntries
         {
-            UserId = "Temp_User",
+            UserId = userId,
             FoodName = dto.FoodName,
             Calories = dto.Calories,
             Protein = dto.Protein,
@@ -41,34 +42,63 @@ public class FoodEntryService(ApplicationDbContext context) : IFoodEntryService
         _context.FoodEntries.Add(newFood);
         await _context.SaveChangesAsync();
 
+        // Map Model to Dto
         return MapToDto(newFood);
     }
 
     public async Task<IEnumerable<FoodEntryDto>> GetFood(string userId)
     {
+        // Find Food entry that matches id + belongs to user
         var foodEntries = await _context.FoodEntries
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.EatenAt)
             .ToListAsync();
 
+        // Map Model to Dto
         return foodEntries.Select(MapToDto);
     }
 
     public async Task<FoodEntryDto?> GetSpecificFood(Guid id, string userId)
     {
+        // Find Food entry that matches id + belongs to user
         var foodEntry = await _context.FoodEntries
             .FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId);
 
+        // Map Model to Dto if not null
         return foodEntry == null ? null : MapToDto(foodEntry);
     }
 
-    public async Task EditFoodEntry()
+    public async Task<bool> EditFoodEntry(Guid id, UpdateFoodEntryDto dto, string userId)
     {
+        // Find Food entry that matches id + belongs to user
+        var foodEntry = await _context.FoodEntries
+            .FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId);
 
+        if (foodEntry == null) return false;
+
+        // Update Food entry if changed & not null or else keep same
+        foodEntry.FoodName = dto.FoodName ?? foodEntry.FoodName;
+        foodEntry.Calories = dto.Calories ?? foodEntry.Calories;
+        foodEntry.Protein = dto.Protein ?? foodEntry.Protein;
+        foodEntry.Carbohydrates = dto.Carbohydrates ?? foodEntry.Carbohydrates;
+        foodEntry.Fats = dto.Fats ?? foodEntry.Fats;
+        foodEntry.EatenAt = dto.EatenAt ?? foodEntry.EatenAt;
+
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 
-    public async Task DeleteFoodEntry()
+    public async Task<bool> DeleteFoodEntry(Guid id, string userId)
     {
+        // Find Food entry that matches id + belongs to user
+        var foodEntry = await _context.FoodEntries
+            .FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId);
 
+        if (foodEntry == null) return false;
+
+        _context.FoodEntries.Remove(foodEntry);
+
+        return true;
     }
 }

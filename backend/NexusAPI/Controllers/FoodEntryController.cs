@@ -13,6 +13,7 @@ public class FoodEntryController(IFoodEntryService foodEntryService) : Controlle
 {
     private readonly IFoodEntryService _foodEntryService = foodEntryService;
 
+    // Retrieve User Id from JWT token
     private string GetUserId()
     {
         return User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
@@ -21,7 +22,9 @@ public class FoodEntryController(IFoodEntryService foodEntryService) : Controlle
     [HttpPost]
     public async Task<IActionResult> CreateFoodEntry(CreateFoodEntryDto dto)
     {
-        var createdFoodEntry = _foodEntryService.CreateFoodEntry(dto);
+        var userId = GetUserId();
+
+        var createdFoodEntry = _foodEntryService.CreateFoodEntry(dto, userId);
 
         return CreatedAtAction(nameof(GetSpecificFood), new { id = createdFoodEntry.Id }, createdFoodEntry);
     }
@@ -48,5 +51,27 @@ public class FoodEntryController(IFoodEntryService foodEntryService) : Controlle
         }
 
         return Ok(gotFoodEntry);
+    }
+
+    [HttpPut("{int:guid}")]
+    public async Task<IActionResult> EditFoodEntry(Guid id, [FromBody] UpdateFoodEntryDto dto)
+    {
+        var userId = GetUserId();
+
+        var editFoodEntry = await _foodEntryService.EditFoodEntry(id, dto, userId);
+        if (!editFoodEntry) return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{int:guid}")]
+    public async Task<IActionResult> DeleteFoodEntry(Guid id)
+    {
+        var userId = GetUserId();
+
+        var deleteFoodEntry = await _foodEntryService.DeleteFoodEntry(id, userId);
+        if (!deleteFoodEntry) return NotFound();
+
+        return NoContent();
     }
 }
