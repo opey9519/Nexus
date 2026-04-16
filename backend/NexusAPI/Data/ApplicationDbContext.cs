@@ -10,4 +10,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUserModel>
         : base(options) { }
 
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<FoodEntries> FoodEntries { get; set; }
 }
