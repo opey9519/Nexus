@@ -39,7 +39,7 @@ public class FoodEntryService(ApplicationDbContext context) : IFoodEntryService
             EatenAt = dto.EatenAt
         };
 
-        _context.FoodEntries.Add(newFood);
+        await _context.FoodEntries.AddAsync(newFood);
         await _context.SaveChangesAsync();
 
         // Map Model to Dto
@@ -76,7 +76,7 @@ public class FoodEntryService(ApplicationDbContext context) : IFoodEntryService
 
         if (foodEntry == null) return false;
 
-        // Update Food entry if changed & not null or else keep same
+
         foodEntry.FoodName = dto.FoodName ?? foodEntry.FoodName;
         foodEntry.Calories = dto.Calories ?? foodEntry.Calories;
         foodEntry.Protein = dto.Protein ?? foodEntry.Protein;

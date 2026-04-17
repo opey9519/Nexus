@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace NexusAPI.Controllers;
 
 [ApiController]
-[Route("api/food-entry")]
+[Route("api/nutrition/food-entry")]
 [Authorize]
 public class FoodEntryController(IFoodEntryService foodEntryService) : ControllerBase
 {
@@ -20,7 +20,7 @@ public class FoodEntryController(IFoodEntryService foodEntryService) : Controlle
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateFoodEntry(CreateFoodEntryDto dto)
+    public async Task<IActionResult> CreateFoodEntry([FromBody] CreateFoodEntryDto dto)
     {
         var userId = GetUserId();
 
