@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace NexusAPI.Services;
 
-public class UserService(UserManager<ApplicationUserModel> userManager, TokenService tokenService) : IUserService
+public class UserService(UserManager<ApplicationUserModel> userManager) : IUserService
 {
     private readonly UserManager<ApplicationUserModel> _userManager = userManager;
-    private readonly TokenService _tokenService = tokenService;
 
     // Retrieves basic user information by Id
     public async Task<UserGetResponseDto> GetCurrentUserAsync(string userId)
