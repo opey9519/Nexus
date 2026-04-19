@@ -10,9 +10,9 @@ namespace NexusAPI.Controllers;
 [ApiController]
 [Route("api/nutrition/water-entry")]
 [Authorize]
-public class WaterEntryController(IWaterEntry waterEntryService) : ControllerBase
+public class WaterEntryController(IWaterEntryService waterEntryService) : ControllerBase
 {
-    private readonly IWaterEntry _waterEntryService = waterEntryService;
+    private readonly IWaterEntryService _waterEntryService = waterEntryService;
 
     // Retrieve User Id from JWT token
     private string GetUserId()

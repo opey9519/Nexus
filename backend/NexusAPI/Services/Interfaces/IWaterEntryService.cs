@@ -2,7 +2,7 @@ using NexusAPI.DTOs;
 
 namespace NexusAPI.Services.Interfaces;
 
-public interface IWaterEntry
+public interface IWaterEntryService
 {
     Task<WaterEntryDto> CreateWaterEntry(CreateWaterEntryDto dto, string userId);
     Task<WaterEntryDto?> GetWaterEntry(Guid id, string userId);

@@ -6,7 +6,7 @@ using NexusAPI.Services.Interfaces;
 
 namespace NexusAPI.Services;
 
-public class WaterEntryService(ApplicationDbContext context) : IWaterEntry
+public class WaterEntryService(ApplicationDbContext context) : IWaterEntryService
 {
     private readonly ApplicationDbContext _context = context;
 
