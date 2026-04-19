@@ -12,4 +12,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUserModel>
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<FoodEntries> FoodEntries { get; set; }
     public DbSet<WaterEntries> WaterEntries { get; set; }
+    public DbSet<BodyweightEntries> BodyweightEntries { get; set; }
 }
