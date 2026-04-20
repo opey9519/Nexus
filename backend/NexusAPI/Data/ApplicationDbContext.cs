@@ -13,4 +13,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUserModel>
     public DbSet<FoodEntries> FoodEntries { get; set; }
     public DbSet<WaterEntries> WaterEntries { get; set; }
     public DbSet<BodyweightEntries> BodyweightEntries { get; set; }
+    public DbSet<Lifts> Lifts { get; set; }
 }
