@@ -7,7 +7,7 @@ public class FoodEntries
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
-    public required string UserId { get; set; }
+    public required string UserProfileId { get; set; }
     public string? FoodName { get; set; }
     public int Calories { get; set; }
     public float Protein { get; set; }

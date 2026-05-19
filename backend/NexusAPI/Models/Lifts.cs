@@ -6,7 +6,7 @@ public class Lifts
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
-    public required string UserId { get; set; }
+    public required string UserProfileId { get; set; }
     public required string ExerciseName { get; set; }
     public float WeightLBS { get; set; }
     public int Reps { get; set; }
