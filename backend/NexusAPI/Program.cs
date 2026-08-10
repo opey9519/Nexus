@@ -69,7 +69,7 @@ builder.Services.AddAuthentication(options =>
 
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key),
+        IssuerSigningKey = new SymmetricSecurityKey(key) { KeyId = "nexus-signing-key" },
 
         ClockSkew = TimeSpan.Zero // no extra expiration buffer
     };

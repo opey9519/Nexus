@@ -19,7 +19,10 @@ public class TokenService
         var jwtSettings = _config.GetSection("Jwt");
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new InvalidOperationException("JWT Key not configured"))
-        );
+        )
+        {
+            KeyId = "nexus-signing-key"
+        };
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

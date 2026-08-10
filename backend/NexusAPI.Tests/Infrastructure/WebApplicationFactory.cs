@@ -18,6 +18,13 @@ public class WebApplicationFactory : WebApplicationFactory<Program>
     // Overrides existing configuration of Program.cs for Testing
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Use Setting for JWT so the override is visible to Program.cs early reads
+        // (builder.Configuration is read at startup; ConfigureAppConfiguration's
+        // in-memory collection is applied too late and user secrets would shadow it).
+        builder.UseSetting("Jwt:Key", "THIS_IS_A_TEST_SECRET_KEY_THAT_IS_AT_LEAST_32_BYTES_LONG");
+        builder.UseSetting("Jwt:Issuer", "TestIssuer");
+        builder.UseSetting("Jwt:Audience", "TestAudience");
+
         // Configure Secrets to Test Server
         builder.ConfigureAppConfiguration((context, config) =>
         {

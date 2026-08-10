@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 namespace NexusAPI.Models;
 
@@ -23,7 +22,5 @@ public class UserProfile
     public float BodyWeightLBS { get; set; }
     public string? ActivityLevel { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public ICollection<WaterEntries> WaterEntries { get; set; } = new List<WaterEntries>();
-    public ICollection<FoodEntries> FoodEntries { get; set; } = new List<FoodEntries>();
-    public ICollection<BodyweightEntries> BodyweightEntries { get; set; } = new List<BodyweightEntries>();
+    public ApplicationUserModel? User { get; set; }
 }
