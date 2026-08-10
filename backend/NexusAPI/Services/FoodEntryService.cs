@@ -11,7 +11,7 @@ public class FoodEntryService(ApplicationDbContext context) : IFoodEntryService
 {
     private readonly ApplicationDbContext _context = context;
 
-    private static FoodEntryDto MapToDto(FoodEntries entity)
+    private static FoodEntryDto MapToDto(FoodEntry entity)
     {
         return new FoodEntryDto
         {
@@ -25,12 +25,12 @@ public class FoodEntryService(ApplicationDbContext context) : IFoodEntryService
         };
     }
 
-    public async Task<FoodEntryDto> CreateFoodEntry(CreateFoodEntryDto dto, string userId)
+    public async Task<FoodEntryDto> CreateFoodEntry(CreateFoodEntryDto dto, string userProfileId)
     {
         // Create new food entry
-        var newFood = new FoodEntries
+        var newFood = new FoodEntry
         {
-            UserId = userId,
+            UserProfileId = userProfileId,
             FoodName = dto.FoodName,
             Calories = dto.Calories,
             Protein = dto.Protein,
@@ -39,43 +39,42 @@ public class FoodEntryService(ApplicationDbContext context) : IFoodEntryService
             EatenAt = dto.EatenAt
         };
 
-        await _context.FoodEntries.AddAsync(newFood);
+        await _context.FoodEntry.AddAsync(newFood);
         await _context.SaveChangesAsync();
 
         // Map Model to Dto
         return MapToDto(newFood);
     }
 
-    public async Task<IEnumerable<FoodEntryDto>> GetFood(string userId)
+    public async Task<IEnumerable<FoodEntryDto>> GetFood(string userProfileId)
     {
         // Find Food entry that matches id + belongs to user
-        var foodEntries = await _context.FoodEntries
-            .Where(f => f.UserId == userId)
+        var FoodEntry = await _context.FoodEntry
+            .Where(f => f.UserProfileId == userProfileId)
             .OrderByDescending(f => f.EatenAt)
             .ToListAsync();
 
         // Map Model to Dto
-        return foodEntries.Select(MapToDto);
+        return FoodEntry.Select(MapToDto);
     }
 
-    public async Task<FoodEntryDto?> GetSpecificFood(Guid id, string userId)
+    public async Task<FoodEntryDto?> GetSpecificFood(Guid id, string userProfileId)
     {
         // Find Food entry that matches id + belongs to user
-        var foodEntry = await _context.FoodEntries
-            .FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId);
+        var foodEntry = await _context.FoodEntry
+            .FirstOrDefaultAsync(f => f.Id == id && f.UserProfileId == userProfileId);
 
         // Map Model to Dto if not null
         return foodEntry == null ? null : MapToDto(foodEntry);
     }
 
-    public async Task<bool> EditFoodEntry(Guid id, UpdateFoodEntryDto dto, string userId)
+    public async Task<bool> EditFoodEntry(Guid id, UpdateFoodEntryDto dto, string userProfileId)
     {
         // Find Food entry that matches id + belongs to user
-        var foodEntry = await _context.FoodEntries
-            .FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId);
+        var foodEntry = await _context.FoodEntry
+            .FirstOrDefaultAsync(f => f.Id == id && f.UserProfileId == userProfileId);
 
         if (foodEntry == null) return false;
-
 
         foodEntry.FoodName = dto.FoodName ?? foodEntry.FoodName;
         foodEntry.Calories = dto.Calories ?? foodEntry.Calories;
@@ -89,15 +88,15 @@ public class FoodEntryService(ApplicationDbContext context) : IFoodEntryService
         return true;
     }
 
-    public async Task<bool> DeleteFoodEntry(Guid id, string userId)
+    public async Task<bool> DeleteFoodEntry(Guid id, string userProfileId)
     {
         // Find Food entry that matches id + belongs to user
-        var foodEntry = await _context.FoodEntries
-            .FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId);
+        var foodEntry = await _context.FoodEntry
+            .FirstOrDefaultAsync(f => f.Id == id && f.UserProfileId == userProfileId);
 
         if (foodEntry == null) return false;
 
-        _context.FoodEntries.Remove(foodEntry);
+        _context.FoodEntry.Remove(foodEntry);
 
         return true;
     }

@@ -1,6 +1,6 @@
 namespace NexusAPI.Models;
 
-public class WaterEntries
+public class WaterEntry
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public required string UserProfileId { get; set; }

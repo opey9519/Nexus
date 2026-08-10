@@ -10,8 +10,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUserModel>
         : base(options) { }
 
     public DbSet<RefreshToken> RefreshTokens { get; set; }
-    public DbSet<FoodEntries> FoodEntries { get; set; }
-    public DbSet<WaterEntries> WaterEntries { get; set; }
-    public DbSet<BodyweightEntries> BodyweightEntries { get; set; }
+    public DbSet<FoodEntry> FoodEntry { get; set; }
+    public DbSet<WaterEntry> WaterEntry { get; set; }
+    public DbSet<BodyweightEntry> BodyweightEntry { get; set; }
     public DbSet<Lifts> Lifts { get; set; }
+    public DbSet<UserProfile> UserProfile { get; set; }
 }

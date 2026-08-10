@@ -22,6 +22,9 @@ builder.Services.AddControllers();
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<FoodEntryService>();
+builder.Services.AddScoped<WaterEntryService>();
+builder.Services.AddScoped<WeightEntryService>();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

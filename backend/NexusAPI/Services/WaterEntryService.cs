@@ -10,7 +10,7 @@ public class WaterEntryService(ApplicationDbContext context) : IWaterEntryServic
 {
     private readonly ApplicationDbContext _context = context;
 
-    private static WaterEntryDto MapToDto(WaterEntries entity)
+    private static WaterEntryDto MapToDto(WaterEntry entity)
     {
         return new WaterEntryDto
         {
@@ -20,38 +20,38 @@ public class WaterEntryService(ApplicationDbContext context) : IWaterEntryServic
         };
     }
 
-    public async Task<WaterEntryDto> CreateWaterEntry(CreateWaterEntryDto dto, string userId)
+    public async Task<WaterEntryDto> CreateWaterEntry(CreateWaterEntryDto dto, string userProfileId)
     {
         // Create new water entry
-        var newWaterEntry = new WaterEntries
+        var newWaterEntry = new WaterEntry
         {
-            UserId = userId,
+            UserProfileId = userProfileId,
             AmountML = dto.AmountML,
             DrankAt = dto.DrankAt
         };
 
-        await _context.WaterEntries.AddAsync(newWaterEntry);
+        await _context.WaterEntry.AddAsync(newWaterEntry);
         await _context.SaveChangesAsync();
 
         // Map Model to Dto
         return MapToDto(newWaterEntry);
     }
 
-    public async Task<WaterEntryDto?> GetWaterEntry(Guid id, string userId)
+    public async Task<WaterEntryDto?> GetWaterEntry(Guid id, string userProfileId)
     {
         // Find Water entry that matches id + belongs to user
-        var waterEntry = await _context.WaterEntries
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
+        var waterEntry = await _context.WaterEntry
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userProfileId);
 
         // Map Model to Dto
         return waterEntry == null ? null : MapToDto(waterEntry);
     }
 
-    public async Task<bool> EditWaterEntry(Guid id, UpdateWaterEntryDto dto, string userId)
+    public async Task<bool> EditWaterEntry(Guid id, UpdateWaterEntryDto dto, string userProfileId)
     {
         // Find Water entry that matches id + belongs to user
-        var waterEntry = await _context.WaterEntries
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
+        var waterEntry = await _context.WaterEntry
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userProfileId);
 
         if (waterEntry == null) return false;
 
@@ -67,12 +67,12 @@ public class WaterEntryService(ApplicationDbContext context) : IWaterEntryServic
     public async Task<bool> DeleteWaterEntry(Guid id, string userId)
     {
         // Find Water entry that matches id + belongs to user
-        var waterEntry = await _context.WaterEntries
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
+        var waterEntry = await _context.WaterEntry
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userId);
 
         if (waterEntry == null) return false;
 
-        _context.WaterEntries.Remove(waterEntry);
+        _context.WaterEntry.Remove(waterEntry);
         await _context.SaveChangesAsync();
 
         return true;

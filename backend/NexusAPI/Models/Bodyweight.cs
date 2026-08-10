@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NexusAPI.Models;
 
-public class BodyweightEntries
+public class BodyweightEntry
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();

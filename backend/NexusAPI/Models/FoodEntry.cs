@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace NexusAPI.Models;
 
 // Food Entries contain a Secondary Key binded to a User
-public class FoodEntries
+public class FoodEntry
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
