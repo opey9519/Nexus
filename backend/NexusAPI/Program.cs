@@ -22,9 +22,11 @@ builder.Services.AddControllers();
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<FoodEntryService>();
-builder.Services.AddScoped<WaterEntryService>();
-builder.Services.AddScoped<WeightEntryService>();
+builder.Services.AddScoped<IFoodEntryService, FoodEntryService>();
+builder.Services.AddScoped<IWaterEntryService, WaterEntryService>();
+builder.Services.AddScoped<IBodyweightService, WeightEntryService>();
+builder.Services.AddScoped<ILiftService, LiftService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

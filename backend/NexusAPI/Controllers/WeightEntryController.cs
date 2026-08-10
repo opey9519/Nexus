@@ -24,17 +24,17 @@ public class WeightEntryController(IBodyweightService bodyweightService) : Contr
     {
         var userId = GetUserId();
 
-        var createdWeightEntry = _bodyweightService.CreateWeightEntry(dto, userId);
+        var createdWeightEntry = await _bodyweightService.CreateWeightEntry(dto, userId);
 
         return CreatedAtAction(nameof(GetWeightEntry), new { id = createdWeightEntry.Id }, createdWeightEntry);
     }
 
-    [HttpGet("{int:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetWeightEntry(Guid id)
     {
         var userId = GetUserId();
 
-        var gotWeightEntry = _bodyweightService.GetWeightEntry(id, userId);
+        var gotWeightEntry = await _bodyweightService.GetWeightEntry(id, userId);
 
         if (gotWeightEntry == null)
         {
@@ -44,7 +44,7 @@ public class WeightEntryController(IBodyweightService bodyweightService) : Contr
         return Ok(gotWeightEntry);
     }
 
-    [HttpPut("{int:guid}")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> EditWeightEntry(Guid id, [FromBody] UpdateWeightEntryDto dto)
     {
         var userId = GetUserId();
@@ -56,7 +56,7 @@ public class WeightEntryController(IBodyweightService bodyweightService) : Contr
         return NoContent();
     }
 
-    [HttpDelete("{int:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteWeightEntry(Guid id)
     {
         var userId = GetUserId();

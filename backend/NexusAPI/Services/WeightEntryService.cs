@@ -20,12 +20,12 @@ public class WeightEntryService(ApplicationDbContext context) : IBodyweightServi
         };
     }
 
-    public async Task<WeightEntryDto> CreateWeightEntry(CreateWeightEntryDto dto, string userProfileId)
+    public async Task<WeightEntryDto> CreateWeightEntry(CreateWeightEntryDto dto, string userId)
     {
         // Create new weight entry
         var newWeightEntry = new BodyweightEntry
         {
-            UserProfileId = userProfileId,
+            UserId = userId,
             BodyweightLBS = dto.BodyweightLBS,
             WeighedAt = dto.WeighedAt
         };
@@ -36,20 +36,20 @@ public class WeightEntryService(ApplicationDbContext context) : IBodyweightServi
         return MapToDto(newWeightEntry);
     }
 
-    public async Task<WeightEntryDto?> GetWeightEntry(Guid id, string userProfileId)
+    public async Task<WeightEntryDto?> GetWeightEntry(Guid id, string userId)
     {
         // Find Weight entry that matches id + belongs to user
         var weightEntry = await _context.BodyweightEntry
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userProfileId);
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
 
         return weightEntry == null ? null : MapToDto(weightEntry);
     }
 
-    public async Task<bool> EditWeightEntry(Guid id, UpdateWeightEntryDto dto, string userProfileId)
+    public async Task<bool> EditWeightEntry(Guid id, UpdateWeightEntryDto dto, string userId)
     {
         // Find Weight entry that matches id + belongs to user
         var weightEntry = await _context.BodyweightEntry
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userProfileId);
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
 
         if (weightEntry == null) return false;
 
@@ -61,11 +61,11 @@ public class WeightEntryService(ApplicationDbContext context) : IBodyweightServi
         return true;
     }
 
-    public async Task<bool> DeleteWeightEntry(Guid id, string userProfileId)
+    public async Task<bool> DeleteWeightEntry(Guid id, string userId)
     {
         // Find Weight entry that matches id + belongs to user
         var weightEntry = await _context.BodyweightEntry
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userProfileId);
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
 
         if (weightEntry == null) return false;
 

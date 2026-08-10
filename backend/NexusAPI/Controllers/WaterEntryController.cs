@@ -25,17 +25,17 @@ public class WaterEntryController(IWaterEntryService waterEntryService) : Contro
     {
         var userId = GetUserId();
 
-        var createdFoodEntry = _waterEntryService.CreateWaterEntry(dto, userId);
+        var createdFoodEntry = await _waterEntryService.CreateWaterEntry(dto, userId);
 
         return CreatedAtAction(nameof(GetWaterEntry), new { id = createdFoodEntry.Id }, createdFoodEntry);
     }
 
-    [HttpGet("{int:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetWaterEntry(Guid id)
     {
         var userId = GetUserId();
 
-        var gotWaterEntry = _waterEntryService.GetWaterEntry(id, userId);
+        var gotWaterEntry = await _waterEntryService.GetWaterEntry(id, userId);
         if (gotWaterEntry == null)
         {
             return NotFound();
@@ -44,7 +44,7 @@ public class WaterEntryController(IWaterEntryService waterEntryService) : Contro
         return Ok(gotWaterEntry);
     }
 
-    [HttpPut("{int:guid}")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> EditWaterEntry(Guid id, [FromBody] UpdateWaterEntryDto dto)
     {
         var userId = GetUserId();
@@ -55,7 +55,7 @@ public class WaterEntryController(IWaterEntryService waterEntryService) : Contro
         return NoContent();
     }
 
-    [HttpDelete("{int:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteWaterEntry(Guid id)
     {
         var userId = GetUserId();

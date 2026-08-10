@@ -33,6 +33,14 @@ public class AuthService(ApplicationDbContext context, UserManager<ApplicationUs
 
         if (!result.Succeeded) throw new ArgumentException("This is an exception");
 
+        // Each user owns exactly one profile (1:1)
+        var userProfile = new UserProfile
+        {
+            UserId = user.Id
+        };
+        await _context.UserProfile.AddAsync(userProfile);
+        await _context.SaveChangesAsync();
+
         return new ResponseUserDto
         {
             Id = user.Id,

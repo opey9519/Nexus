@@ -20,12 +20,12 @@ public class WaterEntryService(ApplicationDbContext context) : IWaterEntryServic
         };
     }
 
-    public async Task<WaterEntryDto> CreateWaterEntry(CreateWaterEntryDto dto, string userProfileId)
+    public async Task<WaterEntryDto> CreateWaterEntry(CreateWaterEntryDto dto, string userId)
     {
         // Create new water entry
         var newWaterEntry = new WaterEntry
         {
-            UserProfileId = userProfileId,
+            UserId = userId,
             AmountML = dto.AmountML,
             DrankAt = dto.DrankAt
         };
@@ -37,21 +37,21 @@ public class WaterEntryService(ApplicationDbContext context) : IWaterEntryServic
         return MapToDto(newWaterEntry);
     }
 
-    public async Task<WaterEntryDto?> GetWaterEntry(Guid id, string userProfileId)
+    public async Task<WaterEntryDto?> GetWaterEntry(Guid id, string userId)
     {
         // Find Water entry that matches id + belongs to user
         var waterEntry = await _context.WaterEntry
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userProfileId);
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
 
         // Map Model to Dto
         return waterEntry == null ? null : MapToDto(waterEntry);
     }
 
-    public async Task<bool> EditWaterEntry(Guid id, UpdateWaterEntryDto dto, string userProfileId)
+    public async Task<bool> EditWaterEntry(Guid id, UpdateWaterEntryDto dto, string userId)
     {
         // Find Water entry that matches id + belongs to user
         var waterEntry = await _context.WaterEntry
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userProfileId);
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
 
         if (waterEntry == null) return false;
 
@@ -68,7 +68,7 @@ public class WaterEntryService(ApplicationDbContext context) : IWaterEntryServic
     {
         // Find Water entry that matches id + belongs to user
         var waterEntry = await _context.WaterEntry
-            .FirstOrDefaultAsync(w => w.Id == id && w.UserProfileId == userId);
+            .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
 
         if (waterEntry == null) return false;
 

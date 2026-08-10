@@ -227,7 +227,7 @@ namespace NexusAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("NexusAPI.Models.BodyweightEntries", b =>
+            modelBuilder.Entity("NexusAPI.Models.BodyweightEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -248,10 +248,12 @@ namespace NexusAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BodyweightEntries");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BodyweightEntry");
                 });
 
-            modelBuilder.Entity("NexusAPI.Models.FoodEntries", b =>
+            modelBuilder.Entity("NexusAPI.Models.FoodEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,10 +286,12 @@ namespace NexusAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FoodEntries");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FoodEntry");
                 });
 
-            modelBuilder.Entity("NexusAPI.Models.Lifts", b =>
+            modelBuilder.Entity("NexusAPI.Models.LiftEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -324,6 +328,8 @@ namespace NexusAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Lifts");
                 });
 
@@ -356,7 +362,37 @@ namespace NexusAPI.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("NexusAPI.Models.WaterEntries", b =>
+            modelBuilder.Entity("NexusAPI.Models.UserProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ActivityLevel")
+                        .HasColumnType("text");
+
+                    b.Property<float>("BodyWeightLBS")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserProfile");
+                });
+
+            modelBuilder.Entity("NexusAPI.Models.WaterEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -377,7 +413,9 @@ namespace NexusAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WaterEntries");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WaterEntry");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -431,6 +469,39 @@ namespace NexusAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("NexusAPI.Models.BodyweightEntry", b =>
+                {
+                    b.HasOne("NexusAPI.Models.ApplicationUserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NexusAPI.Models.FoodEntry", b =>
+                {
+                    b.HasOne("NexusAPI.Models.ApplicationUserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NexusAPI.Models.LiftEntry", b =>
+                {
+                    b.HasOne("NexusAPI.Models.ApplicationUserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("NexusAPI.Models.RefreshToken", b =>
                 {
                     b.HasOne("NexusAPI.Models.ApplicationUserModel", "User")
@@ -440,6 +511,33 @@ namespace NexusAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NexusAPI.Models.UserProfile", b =>
+                {
+                    b.HasOne("NexusAPI.Models.ApplicationUserModel", "User")
+                        .WithOne("UserProfile")
+                        .HasForeignKey("NexusAPI.Models.UserProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NexusAPI.Models.WaterEntry", b =>
+                {
+                    b.HasOne("NexusAPI.Models.ApplicationUserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NexusAPI.Models.ApplicationUserModel", b =>
+                {
+                    b.Navigation("UserProfile");
                 });
 #pragma warning restore 612, 618
         }

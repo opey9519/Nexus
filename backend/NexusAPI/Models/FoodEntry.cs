@@ -7,7 +7,7 @@ public class FoodEntry
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
-    public required string UserProfileId { get; set; }
+    public required string UserId { get; set; }
     public string? FoodName { get; set; }
     public int Calories { get; set; }
     public float Protein { get; set; }
@@ -15,4 +15,5 @@ public class FoodEntry
     public float Fats { get; set; }
     public DateTime EatenAt { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public ApplicationUserModel? User { get; set; }
 }

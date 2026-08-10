@@ -24,7 +24,7 @@ public class FoodEntryController(IFoodEntryService foodEntryService) : Controlle
     {
         var userId = GetUserId();
 
-        var createdFoodEntry = _foodEntryService.CreateFoodEntry(dto, userId);
+        var createdFoodEntry = await _foodEntryService.CreateFoodEntry(dto, userId);
 
         return CreatedAtAction(nameof(GetSpecificFood), new { id = createdFoodEntry.Id }, createdFoodEntry);
     }
@@ -34,17 +34,17 @@ public class FoodEntryController(IFoodEntryService foodEntryService) : Controlle
     {
         var userId = GetUserId();
 
-        var gotAllFoodEntry = _foodEntryService.GetFood(userId);
+        var gotAllFoodEntry = await _foodEntryService.GetFood(userId);
 
         return Ok(gotAllFoodEntry);
     }
 
-    [HttpGet("{int:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetSpecificFood(Guid id)
     {
         var userId = GetUserId();
 
-        var gotFoodEntry = _foodEntryService.GetSpecificFood(id, userId);
+        var gotFoodEntry = await _foodEntryService.GetSpecificFood(id, userId);
         if (gotFoodEntry == null)
         {
             return NotFound();
@@ -53,7 +53,7 @@ public class FoodEntryController(IFoodEntryService foodEntryService) : Controlle
         return Ok(gotFoodEntry);
     }
 
-    [HttpPut("{int:guid}")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> EditFoodEntry(Guid id, [FromBody] UpdateFoodEntryDto dto)
     {
         var userId = GetUserId();
@@ -64,7 +64,7 @@ public class FoodEntryController(IFoodEntryService foodEntryService) : Controlle
         return NoContent();
     }
 
-    [HttpDelete("{int:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteFoodEntry(Guid id)
     {
         var userId = GetUserId();
