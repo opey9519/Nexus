@@ -12,6 +12,10 @@ public class HealthController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok("API is running");
+        return Ok(new
+        {
+            status = "healthy",
+            message = "API is running"
+        });
     }
 }

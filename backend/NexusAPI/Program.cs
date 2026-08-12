@@ -19,6 +19,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.Services.AddControllers();
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NextJsFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<TokenService>();
@@ -108,6 +120,7 @@ if (app.Environment.IsDevelopment())
 //// Map settings
 app.MapControllers();
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseCors("NextJsFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
