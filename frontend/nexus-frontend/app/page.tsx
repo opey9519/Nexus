@@ -1,6 +1,6 @@
 'use client'
 
-import { HealthCheck } from "@/lib/health";
+import { HealthCheck } from "@/lib/Health";
 import { useEffect } from "react";
 
 export default function Home() {
