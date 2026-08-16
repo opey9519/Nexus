@@ -1,4 +1,5 @@
 import type {CreateLiftDto, LiftEntryDto, UpdateLiftEntryDto } from "@/lib/Interfaces/LiftInterface"
+import { ApiError } from "@/lib/Utils";
 
 // API URL to server
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
@@ -27,17 +28,6 @@ async function request<T>(method: string, url: string, body?: unknown): Promise<
     }
 
     return (await response.json()) as T;
-}
-
-// Error thrown when the API returns a non-2xx status
-export class ApiError extends Error {
-    status: number;
-
-    constructor(status: number, message: string) {
-        super(message);
-        this.name = "ApiError";
-        this.status = status;
-    }
 }
 
 // POST /api/lifts - Creates a new lift

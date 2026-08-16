@@ -10,8 +10,7 @@ export interface CreateUserDto extends LoginUserDto {
 }
 
 export interface UserDto {
+    id: string; // Guid
     email: string;
     username: string;
-    firstName?: string;
-    lastName?: string;
 }
