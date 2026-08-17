@@ -1,7 +1,7 @@
 'use client'
 
-import { HealthCheck } from "@/lib/Health";
-import Navbar from "@/components/NavBar";
+import { HealthCheck } from "@/lib/api/Health";
+import Navbar from "@/components/navigation/NavBar";
 
 export default function Home() {
   const handleClick = () => {

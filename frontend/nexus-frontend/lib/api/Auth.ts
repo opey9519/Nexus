@@ -1,5 +1,5 @@
 import type { CreateUserDto, LoginUserDto, UserDto } from "@/lib/Interfaces/AuthInterface";
-import { ApiError } from "@/lib/Utils";
+import { ApiError } from "@/lib/api/Utils";
 
 // Contains authentication API's
 

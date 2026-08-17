@@ -1,5 +1,5 @@
 import type {CreateLiftDto, LiftEntryDto, UpdateLiftEntryDto } from "@/lib/Interfaces/LiftInterface"
-import { ApiError } from "@/lib/Utils";
+import { ApiError } from "@/lib/api/Utils";
 
 // API URL to server
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
