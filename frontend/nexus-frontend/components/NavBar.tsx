@@ -1,7 +1,8 @@
-'use client'
+"use client"
 
 // Navigation bar used to traverse the application
 
+import { usePathname } from "next/navigation";
 import NavItem from "./NavItem";
 
 // Contains icons
@@ -13,6 +14,8 @@ import {
 } from "lucide-react";
 
 export default function Navbar() {
+    const pathName = usePathname();
+
     return (
         <nav
             className="
@@ -33,26 +36,34 @@ export default function Navbar() {
             >
                 {/* Home */}
                 <NavItem
-                    buttonName="Home"
+                    label="Home"
                     icon={Home}
+                    href="/"
+                    active={pathName === "/"}
                 />
 
                 {/* Workout */}
                 <NavItem
-                    buttonName="Workout"
+                    label="Workout"
                     icon={Dumbbell}
+                    href="/workout"
+                    active={pathName.startsWith("/workout")}
                 />
 
                 {/* History */}
                 <NavItem
-                    buttonName="History"
+                    label="History"
                     icon={History}
+                    href="/history"
+                    active={pathName.startsWith("/history")}
                 />
 
                 {/* User Profile */}
                 <NavItem
-                    buttonName="Profile"
+                    label="Profile"
                     icon={User}
+                    href="/profile"
+                    active={pathName.startsWith("/profile")}
                 />
             </div>
         </nav>
