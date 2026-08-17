@@ -1,7 +1,7 @@
 'use client'
 
 import { HealthCheck } from "@/lib/Health";
-import { useEffect } from "react";
+import Navbar from "@/components/NavBar";
 
 export default function Home() {
   const handleClick = () => {
@@ -15,6 +15,8 @@ export default function Home() {
       </h1>
 
       <button onClick={handleClick}>Heatlh Check</button>
+
+      <Navbar></Navbar>
     </>
   ); 
 }
