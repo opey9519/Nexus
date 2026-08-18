@@ -25,7 +25,7 @@ export default function LoginPage() {
                         text-sm
                         text-[#9A94A8]
                     ">
-                        Welcome back.
+                        
                     </p>
                 </div>
 

@@ -4,16 +4,19 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { LoginUser } from "@/lib/api/Auth";
-import { ApiError } from "next/dist/server/api-utils";
+import { ApiError } from "@/lib/api/Utils";
 
 export default function LoginForm() {
+    // Required to login
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    // Page Quality of Life
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Handle login user
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
