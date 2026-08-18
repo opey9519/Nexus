@@ -15,8 +15,6 @@ export default function Home() {
       </h1>
 
       <button onClick={handleClick}>Heatlh Check</button>
-
-      <Navbar></Navbar>
     </>
   ); 
 }
