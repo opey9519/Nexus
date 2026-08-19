@@ -1,13 +1,14 @@
 import ProfileStat from "./ProfileStat";
 
-interface ProfileInformationProps {
-    firstName: string;
-    lastName: string;
-    email: string;
+interface BodyMetricsProps {
+    heightCm : number;
+    bodyweightLbs: number;
 }
 
-export default function ProfileInformation({firstName, lastName, email} : ProfileInformationProps) {
-    return (
+export default function BodyMetrics({heightCm, bodyweightLbs} : BodyMetricsProps) {
+    const bodyweightKg = (bodyweightLbs / 2.20462);
+
+    return(
         <>
             <section
             className="
@@ -23,22 +24,22 @@ export default function ProfileInformation({firstName, lastName, email} : Profil
                 font-semibold
                 text-[#F5F3FA]
             ">
-                Personal Information
+                Body Metrics
             </h2>
 
             <ProfileStat
-                label="First Name"
-                value={firstName}
+                label="Height"
+                value={`${heightCm} cm`}
             />
 
             <ProfileStat
-                label="Last Name"
-                value={lastName}
+                label="Bodyweight-KG"
+                value={`${bodyweightKg.toFixed(2)} kg`}
             />
 
             <ProfileStat
-                label="Email"
-                value={email}
+                label="Bodyweight-LBS"
+                value={`${bodyweightLbs.toFixed(1)} lbs`}
             />
         </section>
         </>
