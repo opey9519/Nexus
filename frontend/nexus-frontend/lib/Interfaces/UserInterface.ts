@@ -1,4 +1,5 @@
 export interface UserGetResponseDto {
+    username: string;
     firstName?: string | null;
     lastName?: string | null;
     phoneNumber?: string | null;

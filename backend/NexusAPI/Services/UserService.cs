@@ -18,6 +18,7 @@ public class UserService(UserManager<ApplicationUserModel> userManager) : IUserS
 
         var response = new UserGetResponseDto
         {
+            Username = user.UserName!,
             FirstName = user.FirstName,
             LastName = user.LastName,
             PhoneNumber = user.PhoneNumber,
