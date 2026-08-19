@@ -1,4 +1,4 @@
-import type { UserGetResponseDto, UpdateUser } from "../Interfaces/UserInterface";
+import type { UserGetResponseDto, UpdateUser } from "@/lib/Interfaces/UserInterface";
 import { ApiError } from "@/lib/api/Utils";
 
 // API URL to server
@@ -30,14 +30,26 @@ async function request<T>(method: string, url: string, body?: unknown): Promise<
     return (await response.json()) as T;
 }
 
-export async function GetUser() {
-    
+// GET /api/user/me - Gets the current user; returns null if not authenticated
+export async function GetUser(): Promise<UserGetResponseDto | null> {
+    try {
+        const response = await request<{ message: string; userData: UserGetResponseDto }>("GET", "/api/user/me");
+        return response?.userData ?? null;
+    } catch (error) {
+        if (error instanceof ApiError && error.status === 401) {
+            return null;
+        }
+
+        throw error;
+    }
 }
 
-export async function EditUser() {
-
+// PUT /api/user/me - Updates the current user
+export async function EditUser(dto: UpdateUser): Promise<void> {
+    await request<void>("PUT", "/api/user/me", dto);
 }
 
-export async function DeleteUser() {
-
+// DELETE /api/user/me - Deletes the current user
+export async function DeleteUser(): Promise<void> {
+    await request<void>("DELETE", "/api/user/me");
 }

@@ -1,14 +1,14 @@
 export interface UserGetResponseDto {
-    firstName: string;
-    lastName: string;
-    phoneNumber: string
+    firstName?: string | null;
+    lastName?: string | null;
+    phoneNumber?: string | null;
     twoFactorEnabled: boolean;
     email: string;
 }
 
 export interface UpdateUser {
-    firstName?: string;
-    lastName?: string;
-    phoneNumber?: string;
-    email?: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    phoneNumber?: string | null;
+    email: string;
 }
