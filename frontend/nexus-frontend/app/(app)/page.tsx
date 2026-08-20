@@ -1,20 +1,44 @@
-'use client'
+import HomeHeader from "@/components/home/HomeHeader";
+import TodayWorkoutCard from "@/components/home/TodayWorkoutCard";
+import QuickStats from "@/components/home/QuickStats";
+import RecentWorkoutCard from "@/components/home/RecentWorkoutCard";
 
-import { HealthCheck } from "@/lib/api/Health";
-import Navbar from "@/components/navigation/NavBar";
+export default function HomePage() {
+    return (
+        <main className="px-4 pb-24 pt-8">
+            <div className="
+                mx-auto
+                max-w-md
+                space-y-6
+            ">
 
-export default function Home() {
-  const handleClick = () => {
-    HealthCheck()
-  }
+                <HomeHeader
+                    firstName="Gavin"
+                />
 
-  return (
-    <>
-      <h1>
-        Nexus WebApp
-      </h1>
+                <TodayWorkoutCard
+                    workout={{
+                        id: "1",
+                        name: "Upper Body",
+                        exerciseCount: 3,
+                        completedSets: 7,
+                        totalSets: 9,
+                    }}
+                />  
 
-      <button onClick={handleClick}>Heatlh Check</button>
-    </>
-  ); 
+                <QuickStats
+                    workoutCount={24}
+                    streak={7}
+                />
+
+                <RecentWorkoutCard
+                    id="2"
+                    name="Lower Body"
+                    date="Aug 17"
+                    setCount={16}
+                />
+
+            </div>
+        </main>
+    );
 }
