@@ -37,6 +37,24 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(new { message = "User Updated" });
     }
 
+    [HttpPatch("me/body-metrics")]
+    public async Task<IActionResult> PatchUserBodyMetrics(UserPutBodyMetricDto dto)
+    {
+        var userId = GetUserId();
+
+        await _userService.PatchCurrentUserBodyMetricAsync(dto, userId);
+        return Ok(new { message = "User Body Metrics Updated" });
+    }
+
+    [HttpPatch("me/activity-level")]
+    public async Task<IActionResult> PatchCurrentUserActivityLevelAsync(UserPutActivityLevelDto dto)
+    {
+        var userId = GetUserId();
+
+        await _userService.PatchCurrentUserActivityLevelAsync(dto, userId);
+        return Ok(new { message = "User Activity Level Updated" });
+    }
+
     [HttpDelete("me")]
     public async Task<IActionResult> DeleteUser()
     {

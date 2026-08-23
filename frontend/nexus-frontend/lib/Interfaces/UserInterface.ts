@@ -17,3 +17,12 @@ export interface UpdateUser {
     phoneNumber?: string | null;
     email: string;
 }
+
+export interface PatchUserBodyMetrics {
+    changeHeight?: number | null;
+    changeBodyWeightLBS?: string | null;
+}
+
+export interface PatchUserActivityLevel {
+    changeActivityLevel?: string | null;
+}

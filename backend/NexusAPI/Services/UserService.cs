@@ -72,4 +72,31 @@ public class UserService(UserManager<ApplicationUserModel> userManager, Applicat
         var result = await _userManager.DeleteAsync(user);
         if (!result.Succeeded) throw new ArgumentException("Failed to edit user");
     }
+
+    // Updates user body metrics by id
+    public async Task PatchCurrentUserBodyMetricAsync(UserPutBodyMetricDto dto, string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null) throw new InvalidOperationException("User not found");
+
+        user.UserProfile?.Height = dto.ChangeHeight ?? user.UserProfile.Height;
+        user.UserProfile?.BodyWeightLBS = dto.ChangeBodyweightLBS ?? user.UserProfile.BodyWeightLBS;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded) throw new ArgumentException("Failt to update user body metrics");
+    }
+
+    // Updates user activity level by id
+    public async Task PatchCurrentUserActivityLevelAsync(UserPutActivityLevelDto dto, string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null) throw new InvalidOperationException("User not found");
+
+        user.UserProfile?.ActivityLevel = dto.ChangeActivityLevel;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded) throw new ArgumentException("Failt to update user activity level");
+    }
 }
