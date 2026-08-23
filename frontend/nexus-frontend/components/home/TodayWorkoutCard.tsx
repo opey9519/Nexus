@@ -37,7 +37,7 @@ export default function TodayWorkoutCard({
                         text-[#A855F7]
                     "
                 >
-                    Today's Workout
+                    Today&apos;s Workout
                 </p>
 
                 <h2
@@ -112,7 +112,7 @@ export default function TodayWorkoutCard({
                     text-[#A855F7]
                 "
             >
-                Today's Workout
+                Today&apos;s Workout
             </p>
 
             <h2

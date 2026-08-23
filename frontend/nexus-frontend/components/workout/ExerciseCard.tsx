@@ -2,7 +2,7 @@ import SetRow from "./SetRow";
 import ExerciseNotes from "./ExerciseNotes";
 
 interface Set {
-    id: number;
+    id: string;
     setNumber: number
     weight: number;
     reps: number;

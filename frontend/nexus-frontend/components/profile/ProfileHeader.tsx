@@ -5,7 +5,7 @@ interface ProfilePageProps {
 }
 
 export default function ProfileHeader({firstName, lastName, username} : ProfilePageProps) {
-    const initials = `${firstName[0]}${lastName[0]}`.toUpperCase();
+    const initials = `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}`.toUpperCase() || "?";
 
     return (
         <section className="flex flex-col items-center">
