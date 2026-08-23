@@ -1,18 +1,23 @@
 using NexusAPI.Models;
 using NexusAPI.DTOs;
 using NexusAPI.Services.Interfaces;
+using NexusAPI.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace NexusAPI.Services;
 
-public class UserService(UserManager<ApplicationUserModel> userManager) : IUserService
+public class UserService(UserManager<ApplicationUserModel> userManager, ApplicationDbContext context) : IUserService
 {
     private readonly UserManager<ApplicationUserModel> _userManager = userManager;
+    private readonly ApplicationDbContext _context = context;
 
     // Retrieves basic user information by Id
     public async Task<UserGetResponseDto> GetCurrentUserAsync(string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _context.Users
+            .Include(u => u.UserProfile)
+            .FirstOrDefaultAsync(u => u.Id == userId);
 
         if (user == null) throw new InvalidOperationException("User not found");
 
@@ -23,7 +28,11 @@ public class UserService(UserManager<ApplicationUserModel> userManager) : IUserS
             LastName = user.LastName,
             PhoneNumber = user.PhoneNumber,
             TwoFactorEnabled = user.TwoFactorEnabled,
-            Email = user.Email!
+            Email = user.Email!,
+            Height = user.UserProfile?.Height ?? 0,
+            BodyweightLBS = user.UserProfile?.BodyWeightLBS ?? 0,
+            ActivityLevel = user.UserProfile?.ActivityLevel,
+            CreatedAt = user.CreatedAt
         };
 
         return response;

@@ -18,4 +18,10 @@ public class UserGetResponseDto
     public string? PhoneNumber { get; set; }
     public bool TwoFactorEnabled { get; set; }
     required public string Email { get; set; }
+
+    // Profile information
+    public float Height { get; set; }
+    public float BodyweightLBS { get; set; }
+    public string? ActivityLevel { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
