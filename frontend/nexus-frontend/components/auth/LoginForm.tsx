@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { LoginUser } from "@/lib/api/Auth";
 import { ApiError } from "@/lib/api/Utils";
 
 export default function LoginForm() {
+    const router = useRouter();
+
     // Required to login
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -29,8 +32,9 @@ export default function LoginForm() {
                 password
             });
 
-            // TODO:
-            // Redirect to authenicated application
+            // Send the user into the authenticated application
+            router.replace("/");
+            router.refresh();
         } catch (error) {
             if (error instanceof ApiError) {
                 setError(error.message)
@@ -195,7 +199,7 @@ export default function LoginForm() {
 
             {/* Register */}
             <p className="text-center text-sm text-[#9A94A8]">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
                     href="/register"
                     className="

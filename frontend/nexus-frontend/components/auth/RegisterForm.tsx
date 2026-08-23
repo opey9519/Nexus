@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { CreateUser } from "@/lib/api/Auth";
+import { CreateUser, LoginUser } from "@/lib/api/Auth";
 import { ApiError } from "@/lib/api/Utils";
 
 export default function RegisterForm() {
+    const router = useRouter();
+
     // Required to create account
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -44,9 +47,12 @@ export default function RegisterForm() {
                    firstName,
                    lastName
                 });
-    
-                // TODO:
-                // Redirect to authenicated application
+
+                // Log the new user in and enter the application
+                await LoginUser({ email, password });
+
+                router.replace("/");
+                router.refresh();
             } catch (error) {
                 if (error instanceof ApiError) {
                     setError(error.message)
