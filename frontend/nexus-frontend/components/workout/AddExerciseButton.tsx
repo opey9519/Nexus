@@ -1,12 +1,17 @@
-// TODO: Functionality upon clicking button
+"use client"
 
+// Navigates to the new-workout fill-in screen
+
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 
 export default function AddExerciseButton() {
-    return(
-        <>
-            <button
+    const router = useRouter();
+
+    return (
+        <button
             type="button"
+            onClick={() => router.push("/workout/new")}
             className="
                 flex w-full
                 items-center justify-center
@@ -27,6 +32,5 @@ export default function AddExerciseButton() {
 
             Add Exercise
         </button>
-        </>
     );
 }

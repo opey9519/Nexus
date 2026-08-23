@@ -23,7 +23,48 @@ function GetDateKey(date: Date): string {
     return `${year}-${month}-${day}`;
 }
 
-// Groups lift entries by calendar day, newest first
+// Multi-joint movements float to the top of a workout since they
+// take priority. Keyword matching keeps free-text names working,
+// word boundaries avoid false positives (e.g. "triceps pressdown").
+const COMPOUND_PATTERNS: RegExp[] = [
+    /\bsquats?\b/,
+    /\bdeadlifts?\b/,
+    /\brdls?\b/,
+    /\bbench(?:es)?\b/,
+    /\bpress(?:es)?\b/,
+    /\bohp\b/,
+    /\brows?\b/,
+    /\bpull[- ]?ups?\b/,
+    /\bchin[- ]?ups?\b/,
+    /\blunges?\b/,
+    /\bhip[- ]?thrusts?\b/,
+    /\bcleans?\b/,
+    /\bsnatches?\b/,
+    /\bjerks?\b/,
+    /\bdips?\b/,
+    /\bstep[- ]?ups?\b/,
+    /\bgood[- ]?mornings?\b/,
+];
+
+// True when the exercise name looks like a compound movement
+export function IsCompoundExercise(exerciseName: string): boolean {
+    const name = exerciseName.toLowerCase();
+
+    return COMPOUND_PATTERNS.some((pattern) => pattern.test(name));
+}
+
+// Compounds first, everything else after; stable so the original
+// order within each tier is preserved
+export function SortLiftsForDisplay(lifts: LiftEntryDto[]): LiftEntryDto[] {
+    return [...lifts].sort(
+        (a, b) =>
+            Number(IsCompoundExercise(b.exerciseName)) -
+            Number(IsCompoundExercise(a.exerciseName))
+    );
+}
+
+// Groups lift entries by calendar day, newest first.
+// Exercises inside each day are ordered compounds-first.
 export function GroupWorkoutsByDay(lifts: LiftEntryDto[]): WorkoutGroup[] {
     const grouped = new Map<string, WorkoutGroup>();
 
@@ -53,7 +94,13 @@ export function GroupWorkoutsByDay(lifts: LiftEntryDto[]): WorkoutGroup[] {
         group.totalVolume += (lift.weightLBS ?? 0) * (lift.reps ?? 0) * (lift.sets ?? 0);
     }
 
-    return Array.from(grouped.values()).sort(
+    const groups = Array.from(grouped.values());
+
+    for (const group of groups) {
+        group.lifts = SortLiftsForDisplay(group.lifts);
+    }
+
+    return groups.sort(
         (a, b) => b.performedAt.getTime() - a.performedAt.getTime()
     );
 }
