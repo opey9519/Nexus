@@ -49,13 +49,18 @@ export default function ProfilePage() {
         <main className="px-4 pb-24 pt-8">
             <div className="mx-auto max-w-md space-y-6">
 
-                <h1 className="
+                <div className ="flex justify-between items-center">
+                    <h1 className="
                     text-2xl
                     font-semibold
                     text-[#F5F3FA]
                 ">
                     Profile
-                </h1>
+                    </h1>
+
+                    <LogoutButton/>
+                </div>
+                
 
                 {isLoading && <LoadingState />}
 
@@ -113,9 +118,6 @@ export default function ProfilePage() {
                         )}
                     </>
                 )}
-
-                <LogoutButton/>
-
             </div>
         </main>
     );
