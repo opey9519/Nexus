@@ -28,7 +28,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         Response.Cookies.Append("access_token", accessToken, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
+            Secure = Request.IsHttps,
             SameSite = SameSiteMode.Strict,
             Expires = DateTime.UtcNow.AddMinutes(15)
         });
@@ -36,7 +36,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         Response.Cookies.Append("refresh_token", refreshToken.Token, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
+            Secure = Request.IsHttps,
             SameSite = SameSiteMode.Strict,
             Expires = refreshToken.Expires
         });
@@ -59,7 +59,7 @@ public class AuthController(IAuthService authService) : ControllerBase
             Response.Cookies.Append("access_token", accessToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = Request.IsHttps,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddMinutes(15)
             });
@@ -67,7 +67,7 @@ public class AuthController(IAuthService authService) : ControllerBase
             Response.Cookies.Append("refresh_token", newRefreshToken.Token, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = Request.IsHttps,
                 SameSite = SameSiteMode.Strict,
                 Expires = newRefreshToken.Expires
             });

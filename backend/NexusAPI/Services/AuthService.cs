@@ -31,7 +31,12 @@ public class AuthService(ApplicationDbContext context, UserManager<ApplicationUs
         };
         var result = await _userManager.CreateAsync(user, dto.Password); // Hashes password & adds to database
 
-        if (!result.Succeeded) throw new ArgumentException("This is an exception");
+        if (!result.Succeeded)
+        {
+            // Surface the real Identity errors (duplicate email, weak password, ...)
+            var errors = string.Join(" ", result.Errors.Select(e => e.Description));
+            throw new ArgumentException(errors);
+        }
 
         // Each user owns exactly one profile (1:1)
         var userProfile = new UserProfile

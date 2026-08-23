@@ -32,7 +32,9 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
         if (ex is ArgumentException)
         {
             statusCode = (int)HttpStatusCode.BadRequest;
-            message = "Missing required parameter.";
+            message = string.IsNullOrWhiteSpace(ex.Message)
+                ? "Missing required parameter."
+                : ex.Message;
         }
         else if (ex is UnauthorizedAccessException)
         {
