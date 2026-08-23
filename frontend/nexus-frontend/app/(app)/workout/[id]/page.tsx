@@ -1,28 +1,34 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import WorkoutHeader from "@/components/workout/WorkoutHeader";
 import WorkoutSummary from "@/components/workout/WorkoutSummary";
 import ExerciseCard from "@/components/workout/ExerciseCard";
-import AddExerciseButton from "@/components/workout/AddExerciseButton";
 import LoadingState from "@/components/common/LoadingState";
 import ErrorState from "@/components/common/ErrorState";
 import { GetLifts } from "@/lib/api/Lifts";
 import {
     GroupWorkoutsByDay,
-    GetTodayWorkout,
     GetWorkoutLabel,
     ExpandSets,
     type WorkoutGroup,
 } from "@/lib/workouts";
 
-export default function WorkoutPage() {
-    const [today, setToday] = useState<WorkoutGroup | undefined>(undefined);
+// Shows a single past workout, identified by its date key (YYYY-MM-DD)
+
+export default function WorkoutDetailPage() {
+    const params = useParams<{ id: string }>();
+    const workoutId = params?.id;
+
+    const [workout, setWorkout] = useState<WorkoutGroup | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [reloadKey, setReloadKey] = useState(0);
 
     useEffect(() => {
+        if (!workoutId) return;
+
         let active = true;
 
         (async () => {
@@ -30,7 +36,7 @@ export default function WorkoutPage() {
                 const groups = GroupWorkoutsByDay(await GetLifts());
 
                 if (!active) return;
-                setToday(GetTodayWorkout(groups));
+                setWorkout(groups.find((group) => group.id === workoutId));
             } catch (err) {
                 if (!active) return;
                 setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -42,7 +48,7 @@ export default function WorkoutPage() {
         return () => {
             active = false;
         };
-    }, [reloadKey]);
+    }, [workoutId, reloadKey]);
 
     function handleRetry() {
         setError(null);
@@ -60,28 +66,30 @@ export default function WorkoutPage() {
                     <ErrorState message={error} onRetry={handleRetry} />
                 )}
 
-                {!isLoading && !error && (
+                {!isLoading && !error && !workout && (
+                    <p className="text-sm text-[#9A94A8]">
+                        Workout not found.
+                    </p>
+                )}
+
+                {!isLoading && !error && workout && (
                     <>
                         <WorkoutHeader
-                            date={new Date().toLocaleDateString(
+                            date={workout.performedAt.toLocaleDateString(
                                 "en-US",
                                 { weekday: "long", month: "long", day: "numeric" }
                             )}
-                            workoutName={
-                                today ? GetWorkoutLabel(today) : "No workout yet"
-                            }
+                            workoutName={GetWorkoutLabel(workout)}
                         />
 
-                        {today && (
-                            <WorkoutSummary
-                                exerciseCount={today.exerciseCount}
-                                setCount={today.setCount}
-                            />
-                        )}
+                        <WorkoutSummary
+                            exerciseCount={workout.exerciseCount}
+                            setCount={workout.setCount}
+                        />
 
                         <div className="space-y-4">
 
-                            {today?.lifts.map((lift) => (
+                            {workout.lifts.map((lift) => (
                                 <ExerciseCard
                                     key={lift.id}
                                     exerciseName={lift.exerciseName}
@@ -91,8 +99,6 @@ export default function WorkoutPage() {
                             ))}
 
                         </div>
-
-                        <AddExerciseButton />
                     </>
                 )}
 
