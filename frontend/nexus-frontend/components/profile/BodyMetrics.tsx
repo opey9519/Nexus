@@ -3,9 +3,10 @@ import ProfileStat from "./ProfileStat";
 interface BodyMetricsProps {
     heightCm : number;
     bodyweightLbs: number;
+    onEdit?: () => void;
 }
 
-export default function BodyMetrics({heightCm, bodyweightLbs} : BodyMetricsProps) {
+export default function BodyMetrics({heightCm, bodyweightLbs, onEdit} : BodyMetricsProps) {
     const bodyweightKg = (bodyweightLbs / 2.20462);
 
     return(
@@ -18,14 +19,29 @@ export default function BodyMetrics({heightCm, bodyweightLbs} : BodyMetricsProps
                 px-4
             "
         >
-            <h2 className="
-                pt-4
-                text-sm
-                font-semibold
-                text-[#F5F3FA]
-            ">
-                Body Metrics
-            </h2>
+            <div className="flex items-center justify-between pt-4">
+                <h2 className="
+                    text-sm
+                    font-semibold
+                    text-[#F5F3FA]
+                ">
+                    Body Metrics
+                </h2>
+
+                {onEdit && (
+                    <button
+                        type="button"
+                        onClick={onEdit}
+                        className="
+                            text-xs font-medium
+                            text-[#A855F7]
+                            transition-colors hover:text-[#C084FC]
+                        "
+                    >
+                        Edit
+                    </button>
+                )}
+            </div>
 
             <ProfileStat
                 label="Height"

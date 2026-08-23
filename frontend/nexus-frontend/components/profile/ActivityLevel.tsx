@@ -1,8 +1,9 @@
 interface ActivityLevelProps {
     activityLevel: string;
+    onEdit?: () => void;
 }
 
-export default function ActivityLevel({activityLevel} : ActivityLevelProps) {
+export default function ActivityLevel({activityLevel, onEdit} : ActivityLevelProps) {
     return(
         <>
             <section
@@ -13,13 +14,29 @@ export default function ActivityLevel({activityLevel} : ActivityLevelProps) {
                 p-4
             "
         >
-            <h2 className="
-                text-sm
-                font-semibold
-                text-[#F5F3FA]
-            ">
-                Activity Level
-            </h2>
+            <div className="flex items-center justify-between">
+                <h2 className="
+                    text-sm
+                    font-semibold
+                    text-[#F5F3FA]
+                ">
+                    Activity Level
+                </h2>
+
+                {onEdit && (
+                    <button
+                        type="button"
+                        onClick={onEdit}
+                        className="
+                            text-xs font-medium
+                            text-[#A855F7]
+                            transition-colors hover:text-[#C084FC]
+                        "
+                    >
+                        Edit
+                    </button>
+                )}
+            </div>
 
             <div className="mt-3 flex items-center gap-3">
                 <div

@@ -76,27 +76,84 @@ public class UserService(UserManager<ApplicationUserModel> userManager, Applicat
     // Updates user body metrics by id
     public async Task PatchCurrentUserBodyMetricAsync(UserPutBodyMetricDto dto, string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        if (!dto.ChangeHeight.HasValue && !dto.ChangeBodyweightLBS.HasValue)
+        {
+            throw new ArgumentException("No body metric values were provided");
+        }
+
+        if (dto.ChangeHeight.HasValue && (dto.ChangeHeight.Value <= 0 || dto.ChangeHeight.Value > 280))
+        {
+            throw new ArgumentException("Height must be greater than 0 and at most 280 cm");
+        }
+
+        if (dto.ChangeBodyweightLBS.HasValue && (dto.ChangeBodyweightLBS.Value <= 0 || dto.ChangeBodyweightLBS.Value > 1000))
+        {
+            throw new ArgumentException("Bodyweight must be greater than 0 and at most 1000 lbs");
+        }
+
+        var user = await _context.Users
+            .Include(u => u.UserProfile)
+            .FirstOrDefaultAsync(u => u.Id == userId);
 
         if (user == null) throw new InvalidOperationException("User not found");
 
-        user.UserProfile?.Height = dto.ChangeHeight ?? user.UserProfile.Height;
-        user.UserProfile?.BodyWeightLBS = dto.ChangeBodyweightLBS ?? user.UserProfile.BodyWeightLBS;
+        // Accounts created before profiles were enforced may be missing one
+        var profile = user.UserProfile;
 
-        var updateResult = await _userManager.UpdateAsync(user);
-        if (!updateResult.Succeeded) throw new ArgumentException("Failt to update user body metrics");
+        if (profile == null)
+        {
+            profile = new UserProfile
+            {
+                UserId = user.Id
+            };
+
+            user.UserProfile = profile;
+            _context.UserProfile.Add(profile);
+        }
+
+        if (dto.ChangeHeight.HasValue) profile.Height = dto.ChangeHeight.Value;
+        if (dto.ChangeBodyweightLBS.HasValue) profile.BodyWeightLBS = dto.ChangeBodyweightLBS.Value;
+
+        await _context.SaveChangesAsync();
     }
 
     // Updates user activity level by id
     public async Task PatchCurrentUserActivityLevelAsync(UserPutActivityLevelDto dto, string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var validLevels = new[] { "Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active" };
+
+        if (string.IsNullOrWhiteSpace(dto.ChangeActivityLevel))
+        {
+            throw new ArgumentException("An activity level is required");
+        }
+
+        if (!validLevels.Contains(dto.ChangeActivityLevel))
+        {
+            throw new ArgumentException("Invalid activity level");
+        }
+
+        var user = await _context.Users
+            .Include(u => u.UserProfile)
+            .FirstOrDefaultAsync(u => u.Id == userId);
 
         if (user == null) throw new InvalidOperationException("User not found");
 
-        user.UserProfile?.ActivityLevel = dto.ChangeActivityLevel;
+        // Accounts created before profiles were enforced may be missing one
+        var profile = user.UserProfile;
 
-        var updateResult = await _userManager.UpdateAsync(user);
-        if (!updateResult.Succeeded) throw new ArgumentException("Failt to update user activity level");
+        if (profile == null)
+        {
+            profile = new UserProfile
+            {
+                UserId = user.Id
+            };
+
+            user.UserProfile = profile;
+            _context.UserProfile.Add(profile);
+        }
+
+        profile.ActivityLevel = dto.ChangeActivityLevel;
+
+        await _context.SaveChangesAsync();
     }
 }

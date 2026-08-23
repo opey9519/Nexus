@@ -10,12 +10,16 @@ import ErrorState from "@/components/common/ErrorState";
 import LogoutButton from "@/components/auth/LogoutButton";
 import { GetUser } from "@/lib/api/User";
 import type { UserGetResponseDto } from "@/lib/Interfaces/UserInterface";
+import ChangeBodyMetric from "@/components/profile/ChangeBodyMetric";
+import ChangeActivityLevel from "@/components/profile/ChangeActivityLevel";
 
 export default function ProfilePage() {
     const [user, setUser] = useState<UserGetResponseDto | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [reloadKey, setReloadKey] = useState(0);
+    const [isEditingMetrics, setIsEditingMetrics] = useState(false);
+    const [isEditingActivityLevel, setIsEditingActivityLevel] = useState(false);
 
     useEffect(() => {
         let active = true;
@@ -41,6 +45,17 @@ export default function ProfilePage() {
 
     function handleRetry() {
         setError(null);
+        setIsLoading(true);
+        setReloadKey((key) => key + 1);
+    }
+
+    // Metrics are considered unset until both height and bodyweight exist
+    const hasBodyMetrics =
+        (user?.height ?? 0) > 0 && (user?.bodyweightLBS ?? 0) > 0;
+
+    function handleSaved() {
+        setIsEditingMetrics(false);
+        setIsEditingActivityLevel(false);
         setIsLoading(true);
         setReloadKey((key) => key + 1);
     }
@@ -82,14 +97,41 @@ export default function ProfilePage() {
                             email={user.email}
                         />
 
-                        <BodyMetrics
-                            heightCm={user.height ?? 0}
-                            bodyweightLbs={user.bodyweightLBS ?? 0}
-                        />
+                        {!hasBodyMetrics || isEditingMetrics ? (
+                            <ChangeBodyMetric
+                                initialHeight={user.height}
+                                initialBodyweightLBS={user.bodyweightLBS}
+                                onSaved={handleSaved}
+                                onCancel={
+                                    hasBodyMetrics
+                                        ? () => setIsEditingMetrics(false)
+                                        : undefined
+                                }
+                            />
+                        ) : (
+                            <BodyMetrics
+                                heightCm={user.height ?? 0}
+                                bodyweightLbs={user.bodyweightLBS ?? 0}
+                                onEdit={() => setIsEditingMetrics(true)}
+                            />
+                        )}
 
-                        <ActivityLevel
-                            activityLevel={user.activityLevel || "Not set"}
-                        />
+                        {!user.activityLevel || isEditingActivityLevel ? (
+                            <ChangeActivityLevel
+                                initialActivityLevel={user.activityLevel}
+                                onSaved={handleSaved}
+                                onCancel={
+                                    user.activityLevel
+                                        ? () => setIsEditingActivityLevel(false)
+                                        : undefined
+                                }
+                            />
+                        ) : (
+                            <ActivityLevel
+                                activityLevel={user.activityLevel}
+                                onEdit={() => setIsEditingActivityLevel(true)}
+                            />
+                        )}
 
                         {user.createdAt && (
                             <section

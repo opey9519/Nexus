@@ -23,7 +23,7 @@ export async function EditUser(dto: UpdateUser): Promise<void> {
     await request<void>("PUT", "/api/user/me", dto);
 }
 
-// PATCH /api/user/me/body-metric - Updates the current users body metrics
+// PATCH /api/user/me/body-metrics - Updates the current users body metrics
 export async function EditUserBodyMetric(dto: PatchUserBodyMetrics) : Promise<void> {
     await request<void>("PATCH", "/api/user/me/body-metrics", dto);
 }

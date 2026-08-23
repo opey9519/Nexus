@@ -30,11 +30,9 @@ public class UserPutBodyMetricDto
 {
     public float? ChangeHeight { get; set; }
     public float? ChangeBodyweightLBS { get; set; }
-    public DateTime ChangedAt { get; set; } = DateTime.UtcNow;
 }
 
 public class UserPutActivityLevelDto
 {
     public string? ChangeActivityLevel { get; set; }
-    public DateTime ChangedAt { get; set; } = DateTime.UtcNow;
 }

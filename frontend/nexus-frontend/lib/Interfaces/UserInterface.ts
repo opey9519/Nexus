@@ -20,7 +20,7 @@ export interface UpdateUser {
 
 export interface PatchUserBodyMetrics {
     changeHeight?: number | null;
-    changeBodyWeightLBS?: string | null;
+    changeBodyweightLBS?: number | null;
 }
 
 export interface PatchUserActivityLevel {
