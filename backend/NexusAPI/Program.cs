@@ -70,7 +70,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = true; // MUST be true in production
+    options.RequireHttpsMetadata = builder.Environment.IsProduction(); // MUST be true in production
     options.SaveToken = false;
 
     options.TokenValidationParameters = new TokenValidationParameters
@@ -119,11 +119,11 @@ if (app.Environment.IsDevelopment())
 
 
 //// Map settings
-app.MapControllers();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("NextJsFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
 
 // // Verify database connection
 // var conn = builder.Configuration.GetConnectionString("DefaultConnection");
