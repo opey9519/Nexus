@@ -1,29 +1,21 @@
-# Git
-
 .git
 .gitignore
-
-# Environment files
-
-.env
-
-# Node / frontend (if ever referenced)
-
-node_modules
-
-# OS files
-
 .DS_Store
-
-# Logs
-
+node_modules
+.next
+.env*
+../backend/NexusAPI/.env*
+../frontend/nexus-frontend/.env*
 *.log
-
-# Temp files
-
 *.tmp
-
-# Docs / misc
-
+*.user
+*.suo
+bin/
+obj/
+.vs/
+.vscode/
+TestResults/
+NexusAPI.Tests/
+backend.sln
 README.md
 LICENSE

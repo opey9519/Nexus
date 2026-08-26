@@ -9,6 +9,53 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nexus-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ../backend
+      dockerfile: ../docker/Dockerfile.api
+    container_name: nexus-api
+    restart: always
+    ports:
+      - "5181:5181"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=NexusAPI
+      - Jwt__Audience=NexusUsers
+      - Jwt__DurationInMinutes=60
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nexus-network
+
+  frontend:
+    build:
+      context: ../frontend/nexus-frontend
+      dockerfile: ../../docker/Dockerfile.frontend
+    container_name: nexus-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5181
+    depends_on:
+      - api
+    networks:
+      - nexus-network
 
 volumes:
   postgres_data:
+
+networks:
+  nexus-network:
+    driver: bridge
