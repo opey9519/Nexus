@@ -8,17 +8,17 @@ output "ecr_api_repository_url" {
   value       = aws_ecr_repository.api.repository_url
 }
 
-output "ecs_cluser_name" {
+output "ecs_cluster_name" {
   description = "ECS cluster name"
   value       = aws_ecs_cluster.nexus.name
 }
 
-output "rds_endpoint" {
-  description = "RDS PostgreSQL endpoint"
-  value       = aws_db_instance.nexus.address
+output "load_balancer_dns" {
+  description = "DNS name of the Nexus load balancer (only when create_alb = true)"
+  value       = var.create_alb ? aws_lb.nexus[0].dns_name : null
 }
 
-output "load_balancer_dns" {
-  description = "DNS name of the Nexus load balancer"
-  value       = aws_lb.nexus.dns_name
+output "neon_database_url" {
+  description = "Neon PostgreSQL connection string secret ARN"
+  value       = aws_secretsmanager_secret.neon_database_url.arn
 }

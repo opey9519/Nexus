@@ -17,7 +17,7 @@ variable "project_name" {
 }
 
 variable "vpc_cidr" {
-  description = "CIRD block for Nexus VPC"
+  description = "CIDR block for Nexus VPC"
   type        = string
   default     = "10.0.0.0/16"
 }
@@ -31,20 +31,42 @@ variable "availability_zones" {
   ]
 }
 
-variable "database_name" {
-  description = "PostgreSQL database name"
-  type        = string
-  default     = "nexusdb"
+# Whether to provision the internet-facing ALB.
+# Kept off by default for cost: the ALB bills hourly regardless of traffic.
+# Enable (demo mode) only when you want a public, internet-facing entry point.
+variable "create_alb" {
+  description = "Whether to create the internet-facing Application Load Balancer"
+  type        = bool
+  default     = false
 }
 
-variable "database_username" {
-  description = "PostgreSQL username"
+# Fargate task sizing for the API
+variable "fargate_cpu" {
+  description = "CPU units (vCPU * 1024) for the API task"
+  type        = number
+  default     = 256
+}
+
+variable "fargate_memory" {
+  description = "Memory (MiB) for the API task"
+  type        = number
+  default     = 512
+}
+
+variable "desired_count" {
+  description = "Number of running API tasks per service"
+  type        = number
+  default     = 1
+}
+
+variable "neon_database_url" {
+  description = "Neon PostgreSQL connection string (see docs/infrastructure). SSL required."
   type        = string
   sensitive   = true
 }
 
-variable "database_password" {
-  description = "PostgreSQL password"
+variable "jwt_key" {
+  description = "JWT signing key used by the API"
   type        = string
   sensitive   = true
 }
